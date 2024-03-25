@@ -1210,9 +1210,54 @@ https://leetcode.cn/leetbook/read/illustration-of-algorithm/oxrkot/
 
 ### 随机与采样
 
-一般使用`rand()`函数进行随机数的生成。该函数会随机生成一个0~RAND_MAX范围内的整数，可看作均匀分布。该函数生成的是伪随机数。
+一般使用`rand()`函数进行随机数的生成。该函数会随机生成一个0~RAND_MAX范围内的整数，可看作均匀分布。通常情况下，RAND_MAX = 32767。该函数生成的是伪随机数。
 
 当需要一个特定范围内的整数时，例如当我们需要一个0~100内的随机整数，可以使用`rand() % 101`来实现。
+
+如果有更进一步的需求，可以用下面的方法。请注意，下面的方法生成的依然是伪随机数。
+
+`std::uniform_real_distribution` 用于生成指定范围内的均匀分布的双精度或单精度浮点数。
+
+`explicit uniform_real_distribution(RealType a = 0.0, RealType b = 1.0);`其中$a$和$b$：指定生成随机数的范围 $[a, b)$。
+
+```cpp
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_real_distribution<double> dis(0.0, 1.0);
+double random_number = dis(gen);  // 生成 [0, 1) 之间的随机数
+```
+
+`std::uniform_int_distribution` 用于生成指定范围内的均匀分布的整数。
+
+`explicit uniform_int_distribution(IntType a = 0, IntType b = 1);`其中$a$和$b$：指定生成随机数的范围 $[a, b]$。
+
+```cpp
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<int> dis(1, 6);
+int random_number = dis(gen);  // 生成 [1, 6] 之间的随机整数
+```
+
+
+
+* 重要例题：按权重抽样：https://leetcode.cn/problems/random-pick-with-weight/description/
+
+```cpp
+class Solution {
+public:
+    std::mt19937 gen;
+    std::uniform_int_distribution<int> dis;
+    vector<int> pre;
+    Solution(vector<int>& w) : gen(random_device{}()), dis(1, accumulate(w.begin(), w.end(), 0)) {
+        partial_sum(w.begin(), w.end(), back_inserter(pre));
+    }
+    
+    int pickIndex() {
+        int x = dis(gen);
+        return lower_bound(pre.begin(), pre.end(), x) - pre.begin();
+    }
+};
+```
 
 
 
