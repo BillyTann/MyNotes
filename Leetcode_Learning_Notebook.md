@@ -1248,6 +1248,8 @@ public:
     std::mt19937 gen;
     std::uniform_int_distribution<int> dis;
     vector<int> pre;
+    
+    // 需要注意的是，这里通过初始化列表对随机数生成相关组件进行初始化
     Solution(vector<int>& w) : gen(random_device{}()), dis(1, accumulate(w.begin(), w.end(), 0)) {
         partial_sum(w.begin(), w.end(), back_inserter(pre));
     }
@@ -1259,6 +1261,43 @@ public:
 };
 ```
 
+再来放一个在构造函数内部进行初始化的例子。例题：链表抽取随机节点：https://leetcode.cn/problems/linked-list-random-node/description/。这种常规思路下，时间复杂度为$O(1)$，空间复杂度为$O(n)$。
+
+```cpp
+class Solution {
+public:
+    vector<int> v;
+    std::mt19937 gen;
+    std::uniform_int_distribution<int> dis;
+
+    Solution(ListNode* head) {
+        ListNode* pt = head;
+        while (pt != nullptr) {
+            v.push_back(pt->val);
+            pt = pt->next;
+        }
+        std::random_device rd;
+        gen = std::mt19937(rd());
+        dis = std::uniform_int_distribution<int>(0, v.size() - 1);
+    }
+    
+    int getRandom() {
+        int pos = dis(gen);
+        return v[pos];
+    }
+};
+```
+
+#### 水塘抽样
+
+同样是这道题：链表抽取随机节点：https://leetcode.cn/problems/linked-list-random-node/description/，另一种抽样方法可以保证时间复杂度为$O(n)$，空间复杂度为$O(1)$，这就是水塘抽样。
+
+水塘抽样：进行一次抽样时，需要从头到尾遍历链表一次。（默认节点序号从0开始）遍历到第$i$个节点时，有$1/m$的概率用第$i$个节点的值覆盖掉之前的选择。具体的来说，遍历到第$i$个节点时，在$[0,i]$中随机抽取一个整数，假如恰好为0，则用第$i$个节点的值覆盖掉之前的选择。由于每次抽样都需要遍历整个链表，所以时间复杂度为$O(n)$。
+
+数学解释：第$i$个节点被最终抽取的概率 = 遍历到第$i$个节点时抽中 × 遍历到第$i+1$个节点时没抽中 × 遍历到第$i+2$个节点时没抽中 × ... × 遍历到最后一个节点时没抽中
+$$
+p(i)=\frac{1}{i}\times(1-\frac{1}{i+1})\times...\times(1-\frac{1}{n})=\frac{1}{i}\times\frac{i}{i+1}\times...\times\frac{n-1}{n}=\frac{1}{n}
+$$
 
 
 ## 双指针问题
