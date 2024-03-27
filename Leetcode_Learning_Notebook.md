@@ -1183,6 +1183,25 @@ public:
 
 ## 位运算
 
+### 异或
+
+异或(XOR)：同真或同假则为0，不同则为1
+
+| A    | B    | A XOR B |
+| ---- | ---- | ------- |
+| 0    | 0    | 0       |
+| 0    | 1    | 1       |
+| 1    | 0    | 1       |
+| 1    | 1    | 0       |
+
+位运算异或可以用于消除偶数个相同的数。且异或运算具有交换律和结合律。这意味着$A~XOR~B~XOR~C~XOR~B~XOR~A=C$。
+
+且$A~XOR~A=0$，$A~XOR~0=A$。
+
+例题：一个数组中只有一个数出现了一次，其他都出现了两次，找这个出现一次的数：https://leetcode.cn/problems/single-number/description/
+
+### 有限状态机
+
 这道题很经典，在一个数组中只有一个数出现了1次，其余数字均出现3次。https://leetcode.cn/leetbook/read/illustration-of-algorithm/9hyq1r/
 
 通过有限状态自动机进行状态转移计算，然后化简逻辑关系，总结出状态转移方程。
