@@ -1221,7 +1221,12 @@ public:
   if ((n & (n-1)) == 0) return true;  // 正确写法
   ```
 
-  
+
+### 用于统计重复项
+
+尤其是对于字符串问题。例如，有大量长度很长的小写字母字符串，比较两两之间是否有相同字符。此时，如果使用`unordered_set`，可能依旧无法满足时间复杂度要求。可以考虑用26位的整数统计每个字母是否出现，并通过位运算（按位与）来计算两个字符串是否有相同字母。
+
+例题：最大单词长度乘积https://leetcode.cn/problems/maximum-product-of-word-lengths/description/
 
 ## 数学
 
